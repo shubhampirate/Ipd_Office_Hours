@@ -13,9 +13,29 @@ import BarChart from "../../components/BarChart";
 import StatBox from "../../components/StatBox";
 import ProgressCircle from "../../components/ProgressCircle";
 
+import {useEffect} from "react";
+import axios from "axios"
+var tasks = [];
+
 const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+
+    useEffect(() => {
+      (async () => {
+        try {
+          var config = {
+            method: 'get',
+            url: 'http://127.0.0.1:8000/api/task/',
+            headers: { 'Authorization': 'Token 4b5d65673dab7a826590b848477992972aba8a4a' }
+        }
+          tasks = await axios(config);
+          console.log(tasks.data);
+        } catch (error) {
+          console.error(error);
+        }
+      })()
+    })
 
   return (
     <Box m="20px">
@@ -163,6 +183,7 @@ const Dashboard = () => {
             <LineChart isDashboard={true} />
           </Box>
         </Box>
+      
         <Box
           gridColumn="span 4"
           gridRow="span 2"
@@ -181,7 +202,7 @@ const Dashboard = () => {
               Recent Tasks
             </Typography>
           </Box>
-          {mockTransactions.map((transaction, i) => (
+           {mockTransactions.map((transaction, i) => (
             <Box
               key={`${transaction.txId}-${i}`}
               display="flex"
@@ -211,7 +232,40 @@ const Dashboard = () => {
                Submit
               </Box>
             </Box>
-          ))}
+          ))} 
+
+          {tasks.length>0 ? tasks.data.assigned_to_me.map((transaction) => (
+          <Box
+            key={`${transaction}`}
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            borderBottom={`4px solid ${colors.primary[500]}`}
+            p="15px"
+          >
+            <Box>
+              <Typography
+                color={colors.greenAccent[500]}
+                variant="h5"
+                fontWeight="600"
+              >
+                {transaction.assigned_to_me}
+              </Typography>
+              <Typography color={colors.grey[100]}>
+                {transaction.user}
+              </Typography>
+            </Box>
+            <Box color={colors.grey[100]}>{transaction.assigned_by_me}</Box>
+            <Box
+              backgroundColor={colors.greenAccent[500]}
+              p="5px 10px"
+              borderRadius="4px"
+            >
+             Submit
+            </Box>
+          </Box>
+        )) : null}
+
         </Box>
 
         {/* ROW 3 */}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { Link } from "react-router-dom";
@@ -17,6 +17,8 @@ import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutl
 import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
+import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
+import baseUrl from "../../baseUrl";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -41,6 +43,33 @@ const Sidebar = () => {
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
+  const [profile, setProfile] = useState([]);
+
+  useEffect(() => {
+    var myHeaders = new Headers();
+    myHeaders.append(
+      "Authorization",
+      "Token "+localStorage.getItem('token')
+    );
+    myHeaders.append(
+      "Cookie",
+      "csrftoken=fQ5GcS3afHVVVyREFENw1Ub54RZgwlMkIFicrHrxOrddyB7xgNi46AaN5B6A4090; sessionid=vkfter6wndyr2xly3808yhu1meqwl3gn"
+    );
+
+    var requestOptions = {
+			method: "GET",
+			headers: myHeaders,
+			redirect: "follow",
+		};
+
+		fetch(baseUrl + "profile/", requestOptions)
+			.then((response) => response.json())
+			.then((result) => {
+				setProfile(result);
+			})
+			.catch((error) => console.log("error", error));
+
+  }, []);
 
   return (
     <Box
@@ -81,7 +110,7 @@ const Sidebar = () => {
                 ml="15px"
               >
                 <Typography variant="h3" color={colors.grey[100]}>
-                  OfficeHours
+                  EfficienSee
                 </Typography>
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                   <MenuOutlinedIcon />
@@ -97,7 +126,7 @@ const Sidebar = () => {
                   alt="profile-user"
                   width="100px"
                   height="100px"
-                  src={`../../assets/Shubham_Shah_Photo.jpeg`} 
+                  src={baseUrl.slice(0,baseUrl.length-5) + profile.picture}   //{`../../assets/Shubham_Shah_Photo.jpeg`} 
                   style={{ cursor: "pointer", borderRadius: "50%" }}
                 />
               </Box>
@@ -108,10 +137,10 @@ const Sidebar = () => {
                   fontWeight="bold"
                   sx={{ m: "10px 0 0 0" }}
                 >
-                  Shubham Shah
+                  {profile.name}
                 </Typography>
                 <Typography variant="h5" color={colors.greenAccent[500]}>
-                  Admin
+                  {profile.role}
                 </Typography>
               </Box>
             </Box>
@@ -178,7 +207,7 @@ const Sidebar = () => {
             />
             <Item
               title="FAQ Page"
-              to="/faq"
+              to="/notifications_old"
               icon={<HelpOutlineOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
@@ -216,6 +245,20 @@ const Sidebar = () => {
               title="Geography Chart"
               to="/geography"
               icon={<MapOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Typography
+              variant="h6"
+              color={colors.grey[300]}
+              sx={{ m: "15px 0 5px 20px" }}
+            >
+              User
+            </Typography>
+            <Item
+              title="LogOut"
+              to="/logout"
+              icon={<LoginOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
