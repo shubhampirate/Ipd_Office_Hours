@@ -6,6 +6,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 import listPlugin from "@fullcalendar/list";
 import {
   Box,
+  Button,
   List,
   ListItem,
   ListItemText,
@@ -49,7 +50,22 @@ const Calendar = () => {
   return (
     <Box m="20px">
       <Header title="Calendar" subtitle="Full Calendar Interactive Page" />
-
+      <Button 
+      onClick={() => {
+        window.location.href = "https://zoom-clone-production-1d01.up.railway.app/e8ab646f-f9c1-41cf-aec0-11711f3b62c6";
+      }
+       }
+        variant="contained"
+        sx={{
+          backgroundColor: colors.primary[400],
+          color: colors.white,
+          margin: "20px 0",
+        }}
+      
+      
+      >
+        <Typography variant="h5">Instant Meeting</Typography>
+      </Button>
       <Box display="flex" justifyContent="space-between">
         {/* CALENDAR SIDEBAR */}
         <Box

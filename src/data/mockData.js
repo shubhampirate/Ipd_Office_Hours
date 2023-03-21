@@ -432,7 +432,7 @@ export const mockPieData = [
 
 export const mockLineData = [
   {
-    id: "japan",
+    id: "Employee 1",
     color: tokens("dark").greenAccent[500],
     data: [
       {
@@ -594,6 +594,67 @@ export const mockLineData = [
     ],
   },
 ];
+
+export const effData = [ 
+    {
+      id: "person1",
+      color: tokens("dark").blueAccent[300],
+      data: [
+        { x: "January", y: 85 },
+        { x: "February", y: 90 },
+        { x: "March", y: 92 },
+        { x: "April", y: 87 },
+        { x: "May", y: 89 },
+        { x: "June", y: 92 },
+        { x: "July", y: 94 },
+        { x: "August", y: 90 },
+        { x: "September", y: 91 },
+        { x: "October", y: 89 },
+        { x: "November", y: 93 },
+        { x: "December", y: 95 }
+      ]
+    },
+    {
+      id: "person2",
+      color: tokens("dark").redAccent[200],
+      data: [
+        { x: "January", y: 90 },
+        { x: "February", y: 91 },
+        { x: "March", y: 93 },
+        { x: "April", y: 95 },
+        { x: "May", y: 72 },
+        { x: "June", y: 65 },
+        { x: "July", y: 82 },
+        { x: "August", y: 84 },
+        { x: "September", y: 96 },
+        { x: "October", y: 79 },
+        { x: "November", y: 84 },
+        { x: "December", y: 91 }
+
+      ]
+    },
+    {
+      id: "person3",
+      color: tokens("dark").greenAccent[500],
+      data: [
+        { x: "January", y: 85 },
+        { x: "February", y: 85 },
+        { x: "March", y: 82 },
+        { x: "April", y: 77 },
+        { x: "May", y: 83 },
+        { x: "June", y: 72 },
+        { x: "July", y: 84 },
+        { x: "August", y: 50 },
+        { x: "September", y: 96 },
+        { x: "October", y: 83 },
+        { x: "November", y: 73 },
+        { x: "December", y: 85 }
+      ]
+    },
+
+
+];      
+  
 
 export const mockGeographyData = [
   {

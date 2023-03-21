@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
+import { Box, Button, IconButton, Typography, useTheme, Modal, Grid, Paper } from "@mui/material";
 import { tokens } from "../../theme";
 import { mockTransactions } from "../../data/mockData";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
@@ -12,30 +12,47 @@ import GeographyChart from "../../components/GeographyChart";
 import BarChart from "../../components/BarChart";
 import StatBox from "../../components/StatBox";
 import ProgressCircle from "../../components/ProgressCircle";
+import baseUrl from "../../baseUrl";
 
-import {useEffect} from "react";
-import axios from "axios"
-var tasks = [];
+import { useState, useEffect } from "react";
 
 const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const [task, setTask] = useState([]);
+  const [open, setOpen] = useState(false);
 
-    useEffect(() => {
-      (async () => {
-        try {
-          var config = {
-            method: 'get',
-            url: 'http://127.0.0.1:8000/api/task/',
-            headers: { 'Authorization': 'Token 4b5d65673dab7a826590b848477992972aba8a4a' }
-        }
-          tasks = await axios(config);
-          console.log(tasks.data);
-        } catch (error) {
-          console.error(error);
-        }
-      })()
-    })
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  useEffect(() => {
+    var myHeaders = new Headers();
+    myHeaders.append(
+      "Authorization",
+      "Token "+localStorage.getItem('token')
+    );
+    myHeaders.append(
+      "Cookie",
+      "csrftoken=fQ5GcS3afHVVVyREFENw1Ub54RZgwlMkIFicrHrxOrddyB7xgNi46AaN5B6A4090; sessionid=vkfter6wndyr2xly3808yhu1meqwl3gn"
+    );
+
+    var requestOptions = {
+			method: "GET",
+			headers: myHeaders,
+			redirect: "follow",
+		};
+
+		fetch(baseUrl + "task/", requestOptions)
+			.then((response) => response.json())
+			.then((result) => {
+        console.log(result.assigned_to_me);
+        // result.assigned_to_me.map((item) => {
+        //   return(item)
+        //});
+				setTask(result.assigned_to_me);
+			})
+			.catch((error) => console.log("error", error));
+  }, []);
 
   return (
     <Box m="20px">
@@ -162,7 +179,7 @@ const Dashboard = () => {
                 fontWeight="600"
                 color={colors.grey[100]}
               >
-                Project Progress
+                Employee Performance
               </Typography>
               <Typography
                 variant="h3"
@@ -202,9 +219,9 @@ const Dashboard = () => {
               Recent Tasks
             </Typography>
           </Box>
-           {mockTransactions.map((transaction, i) => (
+           {task.map((transaction, i) => (
             <Box
-              key={`${transaction.txId}-${i}`}
+              key={`${transaction.id}-${i}`}
               display="flex"
               justifyContent="space-between"
               alignItems="center"
@@ -217,24 +234,95 @@ const Dashboard = () => {
                   variant="h5"
                   fontWeight="600"
                 >
-                  {transaction.txId}
+                  {transaction.title}
                 </Typography>
                 <Typography color={colors.grey[100]}>
-                  {transaction.user}
+                  {transaction.assigned_by}
                 </Typography>
               </Box>
-              <Box color={colors.grey[100]}>{transaction.date}</Box>
-              <Box
+              <Box color={colors.grey[100]}>{transaction.due_to}</Box>
+              <Button
                 backgroundColor={colors.greenAccent[500]}
+                variant="contained"
+                textColor={colors.grey[100]}
+                //color={colors.greenAccent[500]}
+                sx = {{background:  colors.greenAccent[500]}}
                 p="5px 10px"
-                borderRadius="4px"
+                onClick={handleOpen}
+                //borderRadius="4px"
               >
                Submit
-              </Box>
+              </Button>
+              <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="simple-modal-title"
+            aria-describedby="simple-modal-description"
+          >
+            <Grid
+			    container
+			    component="main"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+			//sx={{ height: "100vh", overflow: "hidden" }}
+		>
+            <Grid
+              item
+              xs={12}
+              sm={5}
+              md={5}
+              component={Paper}
+              elevation={6}
+              square
+              backgroundColor= {colors.primary[400]}
+                      mx={2}
+                      my={30}
+                      justifyContent="center"
+            >
+              <div>
+                <Box
+                  sx={{
+                    my: 8,
+                    mx: 4,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                              py={2}
+                >
+                  <Typography
+                                  variant="h3"
+                                  color={colors.grey[100]}
+                                  fontWeight="bold"
+                                  sx={{ m: "0 0 5px 0" }}
+                  >
+                    {transaction.title}
+                  </Typography>
+                              <Typography
+                                  variant="h5"
+                                  color={colors.grey[100]}
+                                  fontWeight="bold"
+                                  sx={{ m: "0 0 5px 0" }}
+                              >
+                                  {transaction.assigned_by}
+                              </Typography>
+                              <Typography
+                                  variant="h6"
+                                  color={colors.grey[100]}
+                                  fontWeight="bold"
+                                  sx={{ m: "0 0 5px 0" }}
+                              >
+                                  {transaction.description}
+                              </Typography>
+                              </Box>
+              </div>
+            </Grid>
+                  </Grid>
+            </Modal>
             </Box>
-          ))} 
-
-          {tasks.length>0 ? tasks.data.assigned_to_me.map((transaction) => (
+          ))}
+          {/* {tasks.length>0 ? tasks.data.assigned_to_me.map((transaction) => (
           <Box
             key={`${transaction}`}
             display="flex"
@@ -264,12 +352,12 @@ const Dashboard = () => {
              Submit
             </Box>
           </Box>
-        )) : null}
+        )) : null} */}
 
         </Box>
 
         {/* ROW 3 */}
-        <Box
+        {/* <Box
           gridColumn="span 4"
           gridRow="span 2"
           backgroundColor={colors.primary[400]}
@@ -327,7 +415,7 @@ const Dashboard = () => {
           <Box height="200px">
             <GeographyChart isDashboard={true} />
           </Box>
-        </Box>
+        </Box> */}
       </Box>
     </Box>
   );

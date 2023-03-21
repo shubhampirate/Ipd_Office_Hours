@@ -46,9 +46,11 @@ const Topbar = () => {
         <IconButton>
           <SettingsOutlinedIcon />
         </IconButton>
+        <Link component={RouterLink} to="/profile">
         <IconButton>
           <PersonOutlinedIcon />
         </IconButton>
+        </Link>
       </Box>
     </Box>
   );

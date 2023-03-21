@@ -18,6 +18,7 @@ import { ColorModeContext, useMode } from "./theme";
 import Calendar from "./scenes/calendar/calendar";
 import Login from "./scenes/login/login";
 import Logout from "./scenes/login/logout";
+import ProfilePage from "./scenes/profile/profile";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -43,6 +44,7 @@ function App() {
             <Routes>
               <Route path='/' element={<PrivateRoute />} > <Route path="/" element={<Dashboard />} /> </Route>
               <Route exact path='/login' element={<Login />} />
+              <Route path="/profile" element={<PrivateRoute />} ><Route path="/profile" element={<ProfilePage />} /> </Route>
               <Route path='/team' element={<PrivateRoute />} ><Route path="/team" element={<Team />} /> </Route>
               <Route path="/notifications_old" element={<PrivateRoute />} ><Route path="/notifications_old" element={<Contacts />} /> </Route>
               <Route path="/invoices" element={<PrivateRoute />} ><Route path="/invoices" element={<Invoices />} /> </Route>

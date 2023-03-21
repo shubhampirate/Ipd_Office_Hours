@@ -6,10 +6,48 @@ import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettin
 import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
 import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
 import Header from "../../components/Header";
+import { useState, useEffect } from "react";
+import baseUrl from "../../baseUrl";
 
 const Team = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const [user, setUser] = useState([]);
+
+  useEffect(() => {
+    var myHeaders = new Headers();
+    myHeaders.append(
+      "Authorization",
+      "Token "+localStorage.getItem('token')
+    );
+    myHeaders.append(
+      "Cookie",
+      "csrftoken=fQ5GcS3afHVVVyREFENw1Ub54RZgwlMkIFicrHrxOrddyB7xgNi46AaN5B6A4090; sessionid=vkfter6wndyr2xly3808yhu1meqwl3gn"
+    );
+
+    var requestOptions = {
+			method: "GET",
+			headers: myHeaders,
+			redirect: "follow",
+		};
+
+		fetch(baseUrl + "all_employees/", requestOptions)
+			.then((response) => response.json())
+			.then((result) => {
+        console.log(result);
+        result.map((item, index) => {
+          item.id = index+1
+          item.efficiency = item.efficiency.map((item) => item.efficiency)
+          if(item.user === localStorage.getItem('email')){ 
+            item.name = "You";
+          }
+          return(item)
+        });
+				setUser(result);
+			})
+			.catch((error) => console.log("error", error));
+  }, []);
+
   const columns = [
     { field: "id", headerName: "ID" },
     {
@@ -19,27 +57,32 @@ const Team = () => {
       cellClassName: "name-column--cell",
     },
     {
-      field: "age",
-      headerName: "Age",
+      field: "efficiency",
+      headerName: "Efficiency",
       type: "number",
       headerAlign: "left",
       align: "left",
+      renderCell: ({ row: { efficiency } }) => {
+        console.log(efficiency);
+        efficiency.length === 0 ? (efficiency = [0]) : (efficiency = efficiency);
+        let eff_val = efficiency[efficiency.length-1]
+        return (
+            <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
+              {eff_val}
+            </Typography>
+        );
+      },
     },
     {
-      field: "phone",
-      headerName: "Phone Number",
-      flex: 1,
-    },
-    {
-      field: "email",
+      field: "user",
       headerName: "Email",
       flex: 1,
     },
     {
-      field: "accessLevel",
-      headerName: "Access Level",
+      field: "role",
+      headerName: "Role",
       flex: 1,
-      renderCell: ({ row: { access } }) => {
+      renderCell: ({ row: { role } }) => {
         return (
           <Box
             width="60%"
@@ -48,26 +91,25 @@ const Team = () => {
             display="flex"
             justifyContent="center"
             backgroundColor={
-              access === "admin"
+              role === "Admin"
                 ? colors.greenAccent[600]
-                : access === "manager"
+                : role === "Team Leader"
                 ? colors.greenAccent[700]
                 : colors.greenAccent[700]
             }
             borderRadius="4px"
           >
-            {access === "admin" && <AdminPanelSettingsOutlinedIcon />}
-            {access === "manager" && <SecurityOutlinedIcon />}
-            {access === "user" && <LockOpenOutlinedIcon />}
+            {role === "Admin" && <AdminPanelSettingsOutlinedIcon />}
+            {role === "Team Leader" && <SecurityOutlinedIcon />}
+            {role === "Employee" && <LockOpenOutlinedIcon />}
             <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
-              {access}
+              {role}
             </Typography>
           </Box>
         );
       },
     },
   ];
-
   return (
     <Box m="20px">
       <Header title="TEAM" subtitle="Managing the Team Members" />
@@ -100,7 +142,7 @@ const Team = () => {
           },
         }}
       >
-        <DataGrid checkboxSelection rows={mockDataTeam} columns={columns} />
+        <DataGrid checkboxSelection rows={user} columns={columns} />
       </Box>
     </Box>
   );
