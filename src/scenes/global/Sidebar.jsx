@@ -6,6 +6,9 @@ import "react-pro-sidebar/dist/css/styles.css";
 import { tokens } from "../../theme";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";
+//importing task icon
+import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 // import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
 import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
@@ -156,25 +159,25 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
+            <Item
+              title="Notifications"
+              to="/notifications"
+              icon={<NotificationsOutlinedIcon/>}
+              selected={selected}
+              setSelected={setSelected}
+            />
 
-            <Typography
+            {/* <Typography
               variant="h6"
               color={colors.grey[300]}
               sx={{ m: "15px 0 5px 20px" }}
             >
               Data
-            </Typography>
+            </Typography> */}
             <Item
               title="Manage Team"
               to="/team"
               icon={<PeopleOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Notifications"
-              to="/notifications"
-              icon={<NotificationsOutlinedIcon/>}
               selected={selected}
               setSelected={setSelected}
             />
@@ -186,17 +189,24 @@ const Sidebar = () => {
               setSelected={setSelected}
             /> */}
 
-            <Typography
+            {/* <Typography
               variant="h6"
               color={colors.grey[300]}
               sx={{ m: "15px 0 5px 20px" }}
             >
-              Pages
-            </Typography>
-            <Item
+            Pages
+            </Typography> */}
+            {/* <Item
               title="Profile Form"
               to="/form"
               icon={<PersonOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            /> */}
+            <Item
+              title="Assign Task"
+              to="/assign-task"
+              icon={<AssignmentOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
@@ -207,14 +217,21 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
+            <Item
+              title="Rewards"
+              to="/notifications_old"
+              icon={<EmojiEventsOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
 
-            <Typography
+            {/* <Typography
               variant="h6"
               color={colors.grey[300]}
               sx={{ m: "15px 0 5px 20px" }}
             >
               Charts
-            </Typography>
+            </Typography> */}
             {/* <Item
               title="Bar Chart"
               to="/bar"
@@ -229,13 +246,13 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             /> */}
-            <Item
+            {/* <Item
               title="Line Chart"
               to="/line"
               icon={<TimelineOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
-            />
+            /> */}
             {/* <Item
               title="Geography Chart"
               to="/geography"
@@ -243,24 +260,31 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             /> */}
-            <Typography
+            {/* <Typography
               variant="h6"
               color={colors.grey[300]}
               sx={{ m: "15px 0 5px 20px" }}
             >
+
               User
-            </Typography>
-            <Item
-              title="LogOut"
-              to="/logout"
-              icon={<LoginOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
+            </Typography> */}
+            </Box>
+            
+            <Box paddingLeft={isCollapsed ? undefined : "10%"}
+            position="absolute"
+            bottom="0"
+            >
             <Item
               title="Help"
               to="/notifications_old"
               icon={<HelpOutlineOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="LogOut"
+              to="/logout"
+              icon={<LoginOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
